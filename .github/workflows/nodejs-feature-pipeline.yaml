@@ -41,7 +41,7 @@ jobs:
         run: npm test
 
       - name: Update status — sonar-scan
-        uses: daws-88s/workflows/.github/actions/update-commit-status@main
+        uses: RoboshopGit/workflows/.github/actions/update-commit-status@main
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           context: unit-tests
