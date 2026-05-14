@@ -10,7 +10,7 @@ on:
         type: string
 
 env:
-  ACC_ID: "160885265516"
+  ACC_ID: "982597090414"
   REGION: us-east-1
 
 jobs:
@@ -60,7 +60,7 @@ jobs:
 
     # - name: Update status — sonar-scan
     #   if: always()
-    #   uses: daws-88s/workflows/.github/actions/update-commit-status@main
+    #   uses: RoboshopGit/workflows/.github/actions/update-commit-status@main
     #   with:
     #     token: ${{ secrets.GITHUB_TOKEN }}
     #     context: sonar-scan
@@ -77,7 +77,7 @@ jobs:
 
     - name: Update status — library-scan
       if: always()
-      uses: daws-88s/workflows/.github/actions/update-commit-status@main
+      uses: RoboshopGit/workflows/.github/actions/update-commit-status@main
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
         context: library-scan
@@ -130,7 +130,7 @@ jobs:
 
     - name: Update status — push-image
       if: always()
-      uses: daws-88s/workflows/.github/actions/update-commit-status@main
+      uses: RoboshopGit/workflows/.github/actions/update-commit-status@main
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
         context: push-image

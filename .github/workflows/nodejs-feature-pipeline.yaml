@@ -14,7 +14,7 @@ on:
 env:
   project: ${{ inputs.project }}
   component: ${{ inputs.component }}
-  acc_id: 160885265516
+  acc_id: 982597090414
 
 jobs:
   # Job name
@@ -40,13 +40,13 @@ jobs:
         id: unit_tests
         run: npm test
 
-      # - name: Update status — sonar-scan
-      #   uses: RoboshopGit/workflows/.github/actions/update-commit-status@main
-      #   with:
-      #     token: ${{ secrets.GITHUB_TOKEN }}
-      #     context: unit-tests
-      #     state: ${{ steps.unit_tests.outcome }}
-      #     description: Unit tests ${{ steps.unit_tests.outcome }}
+      - name: Update status — sonar-scan
+        uses: RoboshopGit/workflows/.github/actions/update-commit-status@main
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          context: unit-tests
+          state: ${{ steps.unit_tests.outcome }}
+          description: Unit tests ${{ steps.unit_tests.outcome }}
 
       # - name: sonar scan
       #   id: sonar_scan 
@@ -83,7 +83,7 @@ jobs:
           fail-on-alerts: 'true'  # Fail workflow if alerts found
 
       - name: Update status — library-scan
-        uses: daws-88s/workflows/.github/actions/update-commit-status@main
+        uses: RoboshopGit/workflows/.github/actions/update-commit-status@main
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           context: unit-tests
@@ -118,7 +118,7 @@ jobs:
           severity: 'CRITICAL,HIGH'
 
       - name: Update status — trivy-scan
-        uses: daws-88s/workflows/.github/actions/update-commit-status@main
+        uses: RoboshopGit/workflows/.github/actions/update-commit-status@main
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           context: unit-tests
@@ -131,23 +131,23 @@ jobs:
           docker push  ${acc_id}.dkr.ecr.us-east-1.amazonaws.com/${project}/${component}:${APP_VERSION}
 
       - name: Update status — push-image
-        uses: daws-88s/workflows/.github/actions/update-commit-status@main
+        uses: RoboshopGit/workflows/.github/actions/update-commit-status@main
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           context: unit-tests
           state: ${{ steps.push_image.outcome }}
           description: Unit tests ${{ steps.push_image.outcome }}
 
-      - name: Slack alert
-        if: always()
-        uses: slackapi/slack-github-action@v3.0.3
-        with:
-          webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
-          webhook-type: incoming-webhook
-          payload: |
-            text: "${{ job.status == 'success' && ':white_check_mark:' || ':x:' }} *${{ inputs.project }}/${{ inputs.component }}* feature pipeline *${{ job.status }}*"
-            blocks:
-              - type: "section"
-                text:
-                  type: "mrkdwn"
-                  text: "${{ job.status == 'success' && ':white_check_mark:' || ':x:' }} *${{ inputs.project }}/${{ inputs.component }}* feature pipeline: *${{ job.status }}*\n*Branch:* `${{ github.ref_name }}`\n*Commit:* `${{ github.sha }}`\n*<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View Run>*"
+      # - name: Slack alert
+      #   if: always()
+      #   uses: slackapi/slack-github-action@v3.0.3
+      #   with:
+      #     webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+      #     webhook-type: incoming-webhook
+      #     payload: |
+      #       text: "${{ job.status == 'success' && ':white_check_mark:' || ':x:' }} *${{ inputs.project }}/${{ inputs.component }}* feature pipeline *${{ job.status }}*"
+      #       blocks:
+      #         - type: "section"
+      #           text:
+      #             type: "mrkdwn"
+      #             text: "${{ job.status == 'success' && ':white_check_mark:' || ':x:' }} *${{ inputs.project }}/${{ inputs.component }}* feature pipeline: *${{ job.status }}*\n*Branch:* `${{ github.ref_name }}`\n*Commit:* `${{ github.sha }}`\n*<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View Run>*"
